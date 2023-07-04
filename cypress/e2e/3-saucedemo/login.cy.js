@@ -1,0 +1,27 @@
+describe('Login Scenario', () => {
+  it('Successs Login', () => {
+    cy.visit('https://www.saucedemo.com/')
+    cy.get('#user-name').type('standard_user')
+    cy.get('[data-test="password"]').type('secret_sauce')
+    cy.get('[data-test="login-button"]').click()
+    cy.get('.app_logo').should('be.visible')
+    cy.get('.title').should('be.visible')
+    cy.url().should('eq', 'https://www.saucedemo.com/inventory.html')
+  })
+  it('Failled Login', () => {
+    cy.visit('https://www.saucedemo.com/')
+    cy.get('#user-name').type('salah')
+    cy.get('[data-test="password"]').type('xxxxx')
+    cy.get('[data-test="login-button"]').click()
+    cy.get('[data-test="error"]').should('be.visible')
+    cy.get('[data-test="error"]').should('contain.text', 'Epic sadface: Username and password do not match any user in this service')
+  })
+  it('Failled Login-Locked User', () => {
+    cy.visit('https://www.saucedemo.com/')
+    cy.get('#user-name').type('locked_out_user')
+    cy.get('[data-test="password"]').type('secret_sauce')
+    cy.get('[data-test="login-button"]').click()
+    cy.get('[data-test="error"]').should('be.visible')
+    cy.get('[data-test="error"]').should('contain.text', 'Epic sadface: Sorry, this user has been locked out.')
+  })
+})
